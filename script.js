@@ -1,10 +1,13 @@
 // function start() {
-let currentPlayer = 0;
+
 const game = CreateGame();
 
 function CreateGame() {
+  let currentPlayer = 0;
   const playerOne = [];
   const playerTwo = [];
+  let playerOneScore = 4;
+  let playerTwoScore = 7;
   const board = [];
   const boardSizeSq = 3;
   for (let i = 1; i <= boardSizeSq; i++) {
@@ -22,74 +25,67 @@ function CreateGame() {
   };
 
   // creates a copy of player array that can be accessed but main can not be edited.
-  const getPlayerArray = (player) =>
-    player === 0 ? [...playerOne] : [...playerTwo];
+  const getPlayerArray = () =>
+    isCurrentPlayerPlayerOne() ? [...playerOne] : [...playerTwo];
 
   // Keeps player arrays private
-  const addToPlayerArray = (player, number) =>
-    player === 0 ? playerOne.push(number) : playerTwo.push(number);
+  const addToPlayerArray = (number) =>
+    isCurrentPlayerPlayerOne()
+      ? playerOne.push(number)
+      : playerTwo.push(number);
+
+  //Get currentPlayer
+  const isCurrentPlayerPlayerOne = () => (currentPlayer === 0 ? true : false);
+
+  // Toggle current player
+  const togglePlayer = () =>
+    currentPlayer === 0 ? (currentPlayer = 1) : (currentPlayer = 0);
+
+  //Get Scores
+  const getPlayerScore = (isPlayerOne) =>
+    isPlayerOne ? playerOneScore : playerTwoScore;
 
   return {
     getBoard,
     removeFromBoard,
     getPlayerArray,
     addToPlayerArray,
+    isCurrentPlayerPlayerOne,
+    togglePlayer,
+    getPlayerScore,
   };
 }
 
 // controls game play
-function play() {
-  chooseASquare("first");
+function play(value) {
+  chooseASquare(value);
   if (checkIfWon()) {
-    alert(`You Win ${currentPlayer === 0 ? "player 1" : "player 2"}`);
+    alert(
+      `You Win ${game.isCurrentPlayerPlayerOne() ? "player 1" : "player 2"}`
+    );
     return;
   }
   if (game.getBoard().length <= 0) {
     alert(`Game Over Draw`);
     return;
   }
-  togglePlayer();
-  play();
-}
-
-//Toggle current  player
-
-function togglePlayer() {
-  currentPlayer === 0 ? (currentPlayer = 1) : (currentPlayer = 0);
 }
 
 //Player chooses a square
 
-function chooseASquare(iteration) {
-  let square;
-  const prompt1 = `What square would you like ${
-    currentPlayer === 0 ? "player 1" : "player 2"
-  }`;
-  const prompt2 = `Please choose an available square ${
-    currentPlayer === 0 ? "player 1" : "player 2"
-  }`;
-
-  if (iteration === "first") {
-    square = prompt(prompt1);
-  } else {
-    square = prompt(prompt2);
-  }
-
-  if (isAvailable(Number(square))) {
-    game.addToPlayerArray(currentPlayer === 0 ? Number(0) : 1, Number(square));
-
-    const indexOfSquareInBoardArray = game.getBoard().indexOf(Number(square));
+function chooseASquare(value) {
+  let square = Number(value);
+  if (game.getBoard().includes(square)) {
+    game.addToPlayerArray(square);
+    const indexOfSquareInBoardArray = game.getBoard().indexOf(square);
     game.removeFromBoard(indexOfSquareInBoardArray);
-  } else {
-    chooseASquare("second");
   }
 }
 
 // Loops through players choices to see if the have 3 in a row
 
 function checkIfWon() {
-  const currentPlayerLocal =
-    currentPlayer === 0 ? game.getPlayerArray(0) : game.getPlayerArray(1);
+  const currentPlayerLocal = game.getPlayerArray();
   const winningSequences = [
     [11, 12, 13],
     [11, 21, 31],
@@ -116,20 +112,11 @@ function checkIfWon() {
   return false;
 }
 
-function isAvailable(choice) {
-  if (game.getBoard().includes(choice)) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 // play();
 
 //function for rendering DOM state of game
 
 // function getStateOfBoard() {
-
 const playerOne = document.querySelector(".player-one");
 const playerTwo = document.querySelector(".player-two");
 const scorePlayerOne = document.querySelector(".score-one");
@@ -138,14 +125,26 @@ const scorePlayerTwo = document.querySelector(".score-two");
 const playingSquares = [...document.querySelectorAll(".square")];
 
 playingSquares.forEach((element) => {
-  element.addEventListener("click", addClickEvents);
+  element.addEventListener("click", pickSquareDOM);
 });
 
-//Fragile if order of class is changed in html
-
-function addClickEvents() {
-  console.log(this.classList[1]);
+function pickSquareDOM() {
+  play(Number(this.dataset.id));
+  if ((this.firstElementChild.textContent = "*")) {
+    game.isCurrentPlayerPlayerOne()
+      ? (this.firstElementChild.textContent = "X")
+      : (this.firstElementChild.textContent = "O");
+    this.removeEventListener("click", pickSquareDOM);
+  }
+  game.togglePlayer();
 }
 
+const updateDomScores = () => {
+  scorePlayerOne.textContent = `Score ${game.getPlayerScore(true)}`;
+  scorePlayerTwo.textContent = `Score ${game.getPlayerScore(false)}`;
+};
+//   return { updateDom };
 // }
+
+// getStateOfBoard();
 // }
