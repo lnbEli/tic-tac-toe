@@ -8,14 +8,44 @@
     <title>Document</title>
   </head>
   <body>
-    <section class="modal"></section>
+    <section hidden class="overlay"></section>
+    <section hidden class="modal-win">
+      <div class="modal-win-main-body">
+        <button type="button" class="exit-btn-win">x</button>
+        <p class="win-message"></p>
+        <p>
+          <button class="next-game-btn">Next Round!</button>
+        </p>
+      </div>
+    </section>
+    <section hidden class="modal">
+      <form action="#" class="modal-form">
+        <button type="button" class="exit-btn">x</button>
+        <p>
+          <label for="nameOne">Player 1 Name</label>
+          <input type="text" name="playerOne" id="nameOne" required />
+        </p>
+        <p>
+          <label for="nameTwo">Player 2 Name</label>
+          <input type="text" name="playerTwo" id="nameTwo" required />
+        </p>
+
+        <p>
+          <input type="submit" id="submit" name="Submit" />
+        </p>
+      </form>
+    </section>
     <header>
       <div class="player-one">
-        <h2 class="player-name">Player One</h2>
+        <h2 class="player-name-one">Player One</h2>
         <h3 class="score-one">Score 0</h3>
       </div>
+      <div class="heading-btns">
+        <button class="change-name-btn open-btn">Add Names</button>
+        <button class="reset-btn">Reset</button>
+      </div>
       <div class="player-two">
-        <h2 class="player-name">Player Two</h2>
+        <h2 class="player-name-two">Player Two</h2>
         <h3 class="score-two">Score 0</h3>
       </div>
     </header>
