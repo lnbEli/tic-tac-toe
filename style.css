@@ -106,7 +106,7 @@ header {
   grid-row: 2/3;
 }
 .game-board {
-  width: 35%;
+  width: 50%;
   display: grid;
   grid-template: 1fr 1fr 1fr / 1fr 1fr 1fr;
   padding: 15px;
