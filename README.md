@@ -5,3 +5,4 @@ Limit global variables.
 Practice OOP
 Flex and Grid
 Keep DOM Logic seperate
+Mobile Friendly
