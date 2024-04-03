@@ -86,11 +86,10 @@ function Play() {
       game.updatePlayerScore();
       dom.updateDomScores();
       dom.openModalWin();
-
       return;
     }
     if (game.getBoard().length <= 0) {
-      alert(`Game Over Draw`);
+      dom.openModalDraw();
       return;
     }
   }
@@ -207,7 +206,8 @@ function StateDOM() {
 
   function submitForm(e) {
     // Add basic form validation before preventing defualt.
-    if (playerOne.value === "" || playerTwo.value === "") {
+    console.log(playerOne.textContent);
+    if (playerOneInput.value === "" || playerTwoInput.value === "") {
       return;
     }
     e.preventDefault();
@@ -227,6 +227,13 @@ function StateDOM() {
     overlay.removeAttribute("hidden", "");
   }
 
+  //Open modal Draw
+  function openModalDraw() {
+    winMsg.textContent = `Draw!`;
+    modalWin.removeAttribute("hidden", "");
+    overlay.removeAttribute("hidden", "");
+  }
+
   // resets for next round
   function nextRound() {
     game.nextRoundReset();
@@ -237,6 +244,7 @@ function StateDOM() {
   }
   return {
     openModalWin,
+    openModalDraw,
     updateDomScores,
   };
 }
